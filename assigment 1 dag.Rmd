@@ -1,0 +1,102 @@
+---
+title: "assigment 1"
+output: html_document
+date: "2023-10-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+install.packages('igraph')
+library(palmerpenguins)
+library(tidyverse)
+penguins |> 
+  drop_na() -> my_data
+head(my_data)
+colnames(my_data)
+```
+```{r}
+# Load the igraph library
+library(igraph)
+
+# Create a sample directed acyclic graph
+#a represents flipper length
+#b represents bill length
+#c represents body mass
+#this model is wrong as we do not expect flipper length to have any causal effect on body mass or bill length of penguin species. we also do not expect bill length to be a mediator and have any causal effect on body mass.  
+nodes <- c("A", "B", "C")
+edges <- data.frame(
+  from = c("A", "A", "B"),
+  to = c("B", "C", "C")
+)
+
+# Create a graph object
+dag <- graph_from_data_frame(edges, directed = TRUE, vertices = nodes)
+
+# Plot the graph
+plot(dag, layout = layout_as_tree)
+
+```
+```{r}
+model= lm(
+   bill_length_mm ~ flipper_length_mm ,
+  data = my_data)
+summary(model)
+
+gm_scatterplot <- ggplot(data=model,aes(x=flipper_length_mm, y=bill_length_mm))+
+  geom_point()
+
+gm_scatterplot
+```
+
+```{r}
+model2= lm(
+   body_mass_g ~ flipper_length_mm ,
+  data = my_data)
+summary(model2)
+
+gm_scatterplot2 <- ggplot(data=model2,aes(y=body_mass_g, x=flipper_length_mm))+
+  geom_point()
+
+gm_scatterplot2
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+islr chapter 3 exercise 13 
+```{r}
+set.seed(1)
+```
+
+```{r}
+x=rnorm(100,mean=0,sd=1)
+print(x)
+
+eps=rnorm(100,mean=0,sd=.25)
+print(eps)
+
+y=-1+.5*x+eps
+length(y)
+
+```
+```{r}
+plot(x,y)
+
+
+```
+
+
+
